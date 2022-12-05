@@ -1,7 +1,6 @@
 ﻿using RickAndMortyWebAPI.DTOs;
 using RickAndMortyWebAPI.Models;
 using RickAndMortyWebAPI.Services.Interfaces;
-using System.Linq;
 
 namespace RickAndMortyWebAPI.Services.Implementations;
 
@@ -38,6 +37,18 @@ public class PersonService : IPersonService
 
     public async Task<IResult<CharacterResponse>> GetPersonAsync(string name)
     {
-        return await _rickAndMortyService.GetCharacterByNameAsync(name);
+        var characters = await _rickAndMortyService.GetCharacterByNameAsync(name);
+        var character = characters.Response.Origin;
+
+        var characterOriginName = characters.Response.Origin.Name;
+
+        var locations = await _rickAndMortyService.GetLocationByNameAsync(characterOriginName);
+        var findLocation = locations.Response.FirstOrDefault();
+
+        character.Name = findLocation.Name;
+        character.Type = findLocation.Type;
+        character.Dimension = findLocation.Dimension;
+
+        return characters;
     }
 }

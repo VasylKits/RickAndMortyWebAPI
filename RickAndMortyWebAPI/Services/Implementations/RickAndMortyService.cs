@@ -41,9 +41,47 @@ public class RickAndMortyService : IRickAndMortyService
             };
         }
 
-        catch(Exception e)
+        catch (Exception e)
         {
             return new Result<CharacterResponse>
+            {
+                IsError = true,
+                ErrorMessage = e.Message
+            };
+        }
+    }
+
+    public async Task<IResult<List<CharacterOriginLocationResponse>>> GetLocationByNameAsync(string locationName)
+    {
+        try
+        {
+            var url = RickAndMortyUrl.LocationUrl + $"/?name={locationName}";
+            var result = await _httpClientFactory.CreateClient().GetAsync(url);
+
+            if (!result.IsSuccessStatusCode)
+            {
+                var responseError = await result.Content.ReadAsStringAsync();
+
+                return new Result<List<CharacterOriginLocationResponse>>
+                {
+                    IsError = true,
+                    ErrorMessage = responseError
+                };
+            }
+
+            var response = await result.Content.ReadAsStringAsync();
+
+            var locationResponse = JsonSerializer.Deserialize<LocationResult>(response);
+
+            return new Result<List<CharacterOriginLocationResponse>>
+            {
+                Response = locationResponse.Data.ToList()
+            };
+        }
+
+        catch (Exception e)
+        {
+            return new Result<List<CharacterOriginLocationResponse>>
             {
                 IsError = true,
                 ErrorMessage = e.Message

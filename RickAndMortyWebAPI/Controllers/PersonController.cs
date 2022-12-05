@@ -23,7 +23,7 @@ public class PersonController : ControllerBase
         if (result.IsError)
             return NotFound();
 
-        return Ok(result);
+        return Ok(result.Response);
     }
 
     [HttpPost("check-person")]
@@ -34,6 +34,6 @@ public class PersonController : ControllerBase
         if (result.IsError)
             return NotFound();
 
-        return Ok(result);
+        return Ok(result.Response);
     }
 }

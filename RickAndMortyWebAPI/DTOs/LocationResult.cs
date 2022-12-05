@@ -2,8 +2,8 @@
 
 namespace RickAndMortyWebAPI.DTOs;
 
-public class CharacterResult
+public class LocationResult
 {
     [JsonPropertyName("results")]
-    public List<CharacterResponse> Data { get; set; }
+    public List<CharacterOriginLocationResponse> Data { get; set; }
 }
